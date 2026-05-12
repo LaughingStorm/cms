@@ -65,9 +65,12 @@
                 <input type="hidden" name="content" value="{{row['content']}}">
                 </form>
                 <img src="/{{ row['content'] }}">
+
+                <!-- Change the order of content -->
                 <p>Order </p>
-                <from action="/admin/project/order" method="post">
-                <input type="number" name="order" required>
+                <form action="/admin/project/order" method="post">
+                <input type="number" name="order" value = "{{row['order']}}" required>
+                <input type="hidden" name="content_id" value="{{ row['content_id'] }}"> 
                 <input type="hidden" name="id" value="{{project_id}}">
                 <button type="submit">Order</button>
                 </form>

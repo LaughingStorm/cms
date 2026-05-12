@@ -51,6 +51,7 @@ def logout():
 
     return redirect("/")
         
+
 # Hide or unhide the project
 @admin.route("/admin/toggle/<id>", methods = ["GET", "POST"])
 @login_required
@@ -66,6 +67,7 @@ def toggle(id):
     else:
         return render_template("index.html")
     
+
 # Delete a proejct
 @admin.route("/admin/delete/<id>", methods= ["GET", "POST"])
 @login_required
@@ -91,7 +93,7 @@ def add_project():
         description = request.form.get("description")
         order = request.form.get("order")
         if order == "":
-            order = 0
+            order = 1   #Make this the default order, in public.py the image with order 1 is used for the thumbnail 
         # Get the file
         file = request.files["image"]
         
@@ -106,11 +108,15 @@ def add_project():
         db.execute("INSERT INTO projects(title, description, project_order) VALUES(?, ?, ?)", title, description,order)
         # Get the project_id
         project_id = db.execute("SELECT id FROM projects WHERE title = ? AND description = ?", title, description)
-        db.execute("INSERT INTO project_contents(type, content, project_id, sort_order) VALUES ('image', ?, ?, 1)", os.path.join("static/images", filename), project_id[0]["id"])
+        db.execute("INSERT INTO project_contents(type, content, project_id, sort_order) VALUES ('image', ?, ?, 1)", f"static/images/{filename}", project_id[0]["id"])  # For path
+        # on this line I use f"static/images/{filename} instead of the os.path.joing("static/images", filename)) because it breaks the thumbnail preview on windows
+        # as the background-image: url()  was used.
         return redirect("/")
     else:
         return render_template("index.html")
     
+
+# Change the project order
 @admin.route("/admin/order", methods = ["GET", "POST"])
 @login_required
 def order_project():
@@ -147,8 +153,8 @@ def add_content(id):
         order = request.form.get("order")
         # Check if the user entered order and text
         if order == "":
-            order = 0
-        if input == "":
+            order = 1
+        if input == None:
             return redirect(f"/admin/project/add{id}")
         
         if input == "image":
@@ -161,7 +167,7 @@ def add_content(id):
             # Prepend the time to the filename
             filename =str(time.time()) + "_" + fn
 
-            path = os.path.join("static/images", filename)
+            path = f"static/images/{filename}"
             #save the file
             file.save(os.path.join("static/images", filename))
 
@@ -202,13 +208,15 @@ def delete_content():
 def content_order():
     if request.method == "POST":
         order = request.form.get("order")
+        content_id = request.form.get("content_id")
         id = request.form.get("id")
-        
-        return render_template(f"/project/{id}")
+
+        print(f"order: {order}, content_id: {content_id}, id: {id}")
+        db.execute("UPDATE project_contents SET sort_order = ? WHERE id = ?", order, content_id)
+        return redirect(f"/admin/project/{id}")
     
     else:
         return redirect("/")
-
 
 
 @admin.route("/admin/about", methods = ["GET", "POST"])
@@ -221,7 +229,7 @@ def add_about():
         input = request.form.get("type")
         order = request.form.get("order")
         if order =="":
-            order = 2
+            order = 1
         if input == "":
             return redirect("/admin/about", content=content)
         
@@ -235,7 +243,7 @@ def add_about():
             fn = file.filename.replace(" ", "_")
             # Prepend the time to the filename
             filename =str(time.time()) + "_" + fn
-            path = os.path.join("static/images", filename)
+            path = f"static/images/{filename}"
             #save the file
             file.save(os.path.join("static/images", filename))
             # Insert the file in the database
@@ -289,7 +297,7 @@ def add_image():
         # Prepend the time to the filename
         filename =str(time.time()) + "_" + fn
 
-        path = os.path.join("static/images", filename)
+        path = f"static/images/{filename}"
         #save the file
         file.save(os.path.join("static/images", filename))
         

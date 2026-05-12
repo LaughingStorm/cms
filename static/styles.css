@@ -25,7 +25,7 @@ p {
 
 
 
-/*  AI GENERATED BODY BACKGROUND */
+/* BODY BACKGROUND */
 
 body {
   margin: 0;
@@ -89,7 +89,7 @@ img {
     gap: 15px;
 }
 
-/* 1. Fix the Radio Alignment */
+/* Fix the Radio Alignment */
 #radio-inputs {
     display: flex;
     align-items: center; /* Vertically centers the circle and text */
@@ -102,7 +102,7 @@ img {
     cursor: pointer;
 }
 
-/* 2. Stack the main inputs */
+/* Stack the main inputs */
 #inputs {
     display: flex;
     flex-direction: column;
@@ -130,9 +130,6 @@ img {
 #add-inputs button:hover {
     background-color: #444;
 }
-/* End of ai radio */
-
-/* Ai generated projects page styling */
 
 /*   */
 @media (max-width: 768px) {
@@ -150,3 +147,7 @@ img {
     /* break-inside: avoid; */
 }
 }
+
+
+
+

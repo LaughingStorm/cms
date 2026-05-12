@@ -1,11 +1,7 @@
-import requests
-
 from database import Database
-from cs50 import SQL
 from flask import redirect, render_template, session
 from functools import wraps
 
-#from week9 pset
 db = Database("sqlite:///portfolio.db")
 
 #MAJORITY OF THIS CODE IS FROM THE CS50 finance problem from Week 9 - apology, escape and login_rquired
@@ -62,11 +58,11 @@ def get_project(id):
         # If the project_id exists, place the dictionary in list of items else create a new dictionary
 
         if row["project_id"] in project_contents:
-            new_row = {"type": row["type"], "content" : row["content"], "order": row["sort_order"]}
+            new_row = {"type": row["type"], "content" : row["content"], "content_id" :row["id"], "order": row["sort_order"]}
             project_contents[row["project_id"]]["items"].append(new_row)
         else:
             project_contents[row["project_id"]] = {"title": row["title"], "description" : row["description"], "project_order": row["project_order"], "field" : " " ,\
-                                           "items" : [{"type": row["type"], "content" : row["content"], "order": row["sort_order"]}] }
+                                           "items" : [{"type": row["type"], "content" : row["content"], "content_id" :row["id"], "order": row["sort_order"]}] }
     
     # check if the project exists
     if not project_contents:

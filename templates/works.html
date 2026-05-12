@@ -5,45 +5,60 @@
 {% endblock %}
 
 {% block main %}
+
 <h1 class="text-6xl font-medium text-center mb-10">COOLSHITMAKER's WORK</h1>
-<!--  Check if the admin is logged in -->
+
+<!-- ADMIN VIEW -->
 {% if session["user_id"] %}
-<form action="/admin/works/add" method="post" enctype="multipart/form-data">
-    <input type="file" name="image" required>
-    <input type="text" nama="title" placeholder="Title" required>
-    <input type="text" name="alt" placeholder="Alt text" required>
-    <input type="number" name="order" placeholder="Order">
-    <button type="submit">Add</button>
-</form>
-<div class="gallery">
-{% for row in images %}
-    <div class="relative">
-        <div>
-            <form action="/admin/works/delete" method="post">
-                <input type="hidden" name="path" value="{{row['path']}}">
-                <button type="submit"> Delete</button>
-            </form>
-            <img src="{{row['path']}}" alt="{{row['alt']}}">
-            <!-- <p> Order {{row["sort_order"]}}</p> -->
-             <form action="/admin/works/order" method="post">
-            <input type="number" name="order" placeholder="Order" value="{{row['sort_order']}}">
-            <input type="hidden" name="path" value="{{row['path']}}">
-            <button type="submit"> Order</button>
-            </form>
-        </div>
+
+    <!-- Add Image Form -->
+    <div id="add-inputs" style="max-width:450px; margin: 0 auto 2rem auto;">
+        <form action="/admin/works/add" method="post" enctype="multipart/form-data">
+            <div id="inputs">
+                <input type="file" name="image" required>
+                <input type="text" name="title" placeholder="Title">
+                <input type="text" name="alt" placeholder="Alt text" required>
+                <input type="number" name="order" placeholder="Order">
+            </div>
+            <button type="submit">Add</button>
+        </form>
     </div>
-{% endfor %}
-</div>
-<!-- If the admin isn't logged in -->
+
+    <!-- Admin Gallery - same layout as public -->
+    <div class="gallery">
+        {% for row in images %}
+            <div class="relative admin-image-wrap">
+                <img src="{{row['path']}}" alt="{{row['alt']}}">
+
+                <!-- Hover overlay -->
+                <div class="admin-image-controls">
+                    <form action="/admin/works/delete" method="post">
+                        <input type="hidden" name="path" value="{{row['path']}}">
+                        <button type="submit" class="admin-btn admin-btn-delete">Delete</button>
+                    </form>
+                    <form action="/admin/works/order" method="post" class="admin-order-form">
+                        <input type="number" name="order" placeholder="Order" value="{{row['sort_order']}}" class="admin-order-input">
+                        <input type="hidden" name="path" value="{{row['path']}}">
+                        <button type="submit" class="admin-btn admin-btn-order">Set</button>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+<!-- PUBLIC VIEW -->
 {% else %}
-<div class="gallery">
-{% for row in images %}
-    <div class="relative">
-        <div>
-            <img src="{{row['path']}}" alt="{{row['alt']}}">
-        </div>
+
+    <div class="gallery">
+        {% for row in images %}
+            <div class="relative">
+                <div>
+                    <img src="{{row['path']}}" alt="{{row['alt']}}">
+                </div>
+            </div>
+        {% endfor %}
     </div>
-{% endfor %}
-</div>
+
 {% endif %}
+
 {% endblock %}

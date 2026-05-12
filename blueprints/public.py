@@ -19,7 +19,7 @@ def index():
     # Join the projects and project_contents table and put in the dictionary
     # Check if the project is hidden and only show the first image
     else:
-        project = db.execute("SELECT * FROM projects JOIN project_contents ON projects.id=project_id WHERE projects.hidden = False AND project_contents.sort_order = 1 AND projects.title !='About'")
+        project = db.execute("SELECT * FROM projects JOIN project_contents ON projects.id=project_id WHERE projects.hidden = 0 AND projects.title !='About' GROUP BY projects.id HAVING MIN(project_contents.sort_order)")    
     projects = {}
     # Group all the project_contents into one dictionary 
     for row in project:
@@ -36,13 +36,13 @@ def index():
         projects[key]["items"].sort(key=lambda x:x["order"])
     # Sort the dictionary by project_order
     projects_sorted = dict(sorted(projects.items(), key=lambda item: (item[1]["project_order"] is None, item[1]["project_order"])))
-
+    print(projects)
     return render_template("index.html", projects_sorted=projects_sorted)
 
 
 @public.route("/project/<id>")
 def project(id):
-    # title = title.replace("-"," ")
+
     project = db.execute("SELECT * FROM projects JOIN project_contents ON projects.id=project_id WHERE projects.id = ?", id)
     project_contents = { }
     
@@ -50,11 +50,11 @@ def project(id):
     for row in project:
         # If the project_id exists, place the dictionary in list of items else create a new dictionary
         if row["project_id"] in project_contents:
-            new_row = {"type": row["type"], "content" : row["content"], "order": row["sort_order"]}
+            new_row = {"type": row["type"], "content" : row["content"], "content_id" :row["id"] , "order": row["sort_order"]}
             project_contents[row["project_id"]]["items"].append(new_row)
         else:
             project_contents[row["project_id"]] = {"title": row["title"], "description" : row["description"], "project_order": row["project_order"], "field" : " " ,\
-                                           "items" : [{"type": row["type"], "content" : row["content"], "order": row["sort_order"]}] }
+                                           "items" : [{"type": row["type"], "content" : row["content"], "content_id" : row["id"] , "order": row["sort_order"]}] }
     
     # check if the project exists
     if not project_contents:
