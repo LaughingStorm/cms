@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    about
+{% endblock %}
+
+{% block main %}
+<!-- If the admin is logged in -->
+{% if session["user_id"] %}
+          <!-- Display the input based on the admin's input selection -->
+        <script>  
+        document.addEventListener("DOMContentLoaded", function(){
+             let text = document.getElementById("textInput")
+            let image = document.getElementById("imageInput")
+            text.style.display = "none"
+            image.style.display = "none"
+            const radios = document.querySelectorAll('[name="type"]')
+            radios.forEach(button    => {
+                button.addEventListener("change", function() {
+                   
+                    if (this.value === "image")
+                        {
+                            text.style.display ="none"
+                            image.style.display ="block"
+                        }
+                    else{
+                        image.style.display ="none"
+                        text.style.display="block"
+                    }
+                })
+            }); });
+   
+    </script>
+    <h1 class="text-xl font-medium text-center mb-10">ABOUT</h1>
+   {% for row in content %} 
+   <div class="text-center">
+    <form action="/admin/about/delete" method="post">
+        <input type="hidden" name="content" value="{{row['content']}}">
+        <button type="submit">Delete</button>
+        {% if row["type"] == "image" %} 
+            <img src="/{{row['content']}}">
+        {% else%}
+            <p>{{row['content'] }}</p>
+        {% endif %}
+    </form>
+    </div>
+    {% endfor %}
+    <form action="/admin/about" method="post" enctype="multipart/form-data">
+            <div id="radio-inputs">
+            <input type="radio" name="type" value="image"> Image
+            <input type="radio" name="type" value="text"> Text
+            </div>
+            <div id="inputs">
+            <input type="file" name="imageInput" id="imageInput">
+            <input type="text" name="text" placeholder="Text" id="textInput" autocomplete="off"> 
+            <input type="number" name="order" placeholder="order">
+            </div>
+        
+            <button type="submit"> Add</button>
+        </form>
+        
+<!-- If the user is visiting the page -->
+{% else %}
+        <div class="text-center">
+    <h1 class="text-xl font-medium text-center mb-10">ABOUT</h1>
+    {% for row in content %}
+    
+    {% if row["type"] == "image" %}
+        <img src="/{{row['content']}}">
+    {% else%}
+        <p>{{row['content'] }}</p>
+    {% endif %}
+    {% endfor %}
+
+{% endif %}
+</div>
+
+{% endblock %}

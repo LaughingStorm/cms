@@ -1,0 +1,135 @@
+{% extends "layout.html" %}
+
+{% block title %} 
+<title>coolshit project</title>
+
+{% endblock %}
+
+{% block main %}
+
+<!-- check if the admin is logged in -->
+{% if session["user_id"] %}
+        <!-- Display the input based on the admin's input selection -->
+        <script>  
+        document.addEventListener("DOMContentLoaded", function(){
+             let text = document.getElementById("textInput")
+            let image = document.getElementById("imageInput")
+            text.style.display = "none"
+            image.style.display = "none"
+            const radios = document.querySelectorAll('[name="type"]')
+            radios.forEach(button    => {
+                button.addEventListener("change", function() {
+                   
+                    if (this.value === "image")
+                        {
+                            text.style.display ="none"
+                            image.style.display ="block"
+                        }
+                    else{
+                        image.style.display ="none"
+                        text.style.display="block"
+                    }
+                })
+            }); });
+   
+    </script>
+    <!--  Go through all of the projects -->
+    {% for key in project_contents %}
+
+        <!-- Get the title and description of each project -->
+         
+        <h2 class="text-4xl"> {{project_contents[key]["title"] }}</h1>
+        <h3 class="text-m"> {{ project_contents[key]["description"] }}</h5>
+        <div id="add-inputs" class="container-input">
+        <form action="/admin/project/add/{{key}}" method="post" enctype="multipart/form-data">
+            <div id="radio-inputs">
+            <input type="radio" name="type" value="image"> Image
+            <input type="radio" name="type" value="text"> Text
+            </div>
+            <div id="inputs">
+            <input type="file" name="imageInput" id="imageInput">
+            <input type="text" name="text" placeholder="Text" id="textInput" autocomplete="off"> 
+            <input type="number" name="order" placeholder="order">
+            </div>
+            <button type="submit"> Add</button></form>
+        </div>
+        
+        <!--  Render the project's content -->
+        {% for row in project_contents[key]["items"] %}
+            <!-- check if the content is image or text -->
+            {% if row["type"] == "image" %}
+                <!-- Delete the image -->
+                 <form action="/admin/project/delete/" method="post"><button type="submit">Delete</button>
+                    {% set project_id = project_contents.keys() | first %}
+                <input type="hidden" name="project_id" value="{{ project_id }}">   <!-- CLAUDE AI's advice for a hidden input -->
+                <input type="hidden" name="content" value="{{row['content']}}">
+                </form>
+                <img src="/{{ row['content'] }}">
+                <p>Order </p>
+                <from action="/admin/project/order" method="post">
+                <input type="number" name="order" required>
+                <input type="hidden" name="id" value="{{project_id}}">
+                <button type="submit">Order</button>
+                </form>
+        
+            {% else %}
+                <!-- Delete the paragraph  -->
+                <form action="/admin/project/delete/" method="post"><button type="submit">Delete</button>
+                {% set project_id = project_contents.keys() | first %}
+                <input type="hidden" name="project_id" value="{{ project_id }}">   
+                <input type="hidden" name="content" value="{{row['content']}}">
+                <p> {{ row["content"] }}</p>
+                </form>
+                {% endif %}
+        {% endfor %}
+    {% endfor %}
+
+
+<!--  Public route -->
+{% else %}
+
+    <!-- Claude AI added gave me the html classes and some of the elements to change my page layout
+     The logic is fully mine. -->
+
+    <!--  Go through all of the projects -->
+<div class="project-layout max-w-5xl mx-auto px-8 py-12">
+  {% for key in project_contents %}
+
+    <h1 class="font-['Cormorant_Garamond'] text-6xl mb-2">
+      {{ project_contents[key]["title"] }}
+    </h1>
+    <h3 class="text-xl text-stone-500 mb-10">
+      {{ project_contents[key]["description"] }}
+    </h3>
+
+    <!-- Masonry column container -->
+    <div class="columns-2 gap-6 space-y-0">
+      {% for row in project_contents[key]["items"] %}
+
+        {% if row["type"] == "image" %}
+          <div class="break-inside-avoid mb-6">
+            <img
+              src="/{{ row['content'] }}"
+              class="w-full rounded-lg object-cover"
+            >
+          </div>
+
+        {% else %}
+          <div class="break-inside-avoid mb-6">
+            <p class="text-base leading-relaxed text-stone-700">
+              {{ row["content"] }}
+            </p>
+          </div>
+        {% endif %}
+
+      {% endfor %}
+    </div>
+
+  {% endfor %}
+</div>
+
+</div>
+{% endif %}
+
+
+{% endblock %}
