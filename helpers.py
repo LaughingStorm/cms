@@ -73,3 +73,4 @@ def get_project(id):
         project_contents[key]["items"].sort(key=lambda x: (x["order"] is None, x["order"]))
         
     return project_contents
+

@@ -4,3 +4,4 @@ __pycache__/
 flask_session
 node_modules/
 database.py
+test.py

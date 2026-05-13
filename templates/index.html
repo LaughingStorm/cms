@@ -1,91 +1,98 @@
 {% extends "layout.html" %}
-
 {% block title %}
-    <title></title>
+<title></title>
 {% endblock %}
-
 {% block main %}
-<h1 class="text-center  text-6xl mb-3"> COOLSHITMAKER</h1>
+<h1 class="text-center  text-6xl mb-3"> LaughingStorm</h1>
 <h3 class="text-center text-2xl ">Is a crazy creative.</h3>
 <h4 class="text-center text-2xl mb-20">He is an illustrator, designer, programmer, tattoo artist.</h4>
 
 <!-- Render only if the admin is logged in -->
 {% if session["user_id"] %}
-    <h1 class> ADMIN PANEL </h1>
-    <form action="/admin/add" method="post" enctype="multipart/form-data">
-        <input type="file" name="image" required>
-        <input type="text" name="title" placeholder="Title">
-        <textarea id="project_description.input" name="description"  placeholder="description" autocomplete="off"></textarea>
-        <input type="number" name="order" placeholder="Order">
-        <button type="submit"> Upload</button>
-     </form>
-    <!-- render the projects -->
+
+<!-- Add project form -->
+<div class="admin-form-wrap" style="max-width: 420px; margin: 0 auto 2rem auto;">
+  <p style="font-size: 0.75rem; color: #a8a29e; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em;">Add project</p>
+  <form action="/admin/add" method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 0.5rem;">
+    <input type="file" name="image" required>
+    <input type="text" name="title" placeholder="Title">
+    <textarea id="project_description.input" name="description" placeholder="description" autocomplete="off" rows="2"></textarea>
+    <input type="number" name="order" placeholder="Order">
+    <button type="submit">Upload</button>
+  </form>
+</div>
+
+<!-- render the projects -->
 <div class="flex flex-wrap mb-16 mt-7 md:mx-4 justify-center items-center 
-    text-center gap-2 sm:gap-5 w-fit text-neutral-600">
-{% for key in projects_sorted %}
-    {% if projects_sorted[key]["hidden"] == 0 %}
-                 <!-- <div class="flex gap-6 flex-wrap font-sans"> -->
-                    <form action="/admin/toggle/{{key}}" method="post"><button type="submit">Hide</button></form>
-                {% else %}
-                    <form action="/admin/toggle/{{key}}" method="post"><button type="submit">Unhide</button></form>
-                {%endif%}
-                <form action="/admin/delete/{{key}}" method="post"><button type="submit"> Delete</button></form>
-    <div><h2 class="text-3xl">{{projects_sorted[key]["title"]}}</h1>
-        <h3 class="text-m">{{projects_sorted[key]["description"]}}</h2>
-        {% for row in projects_sorted[key]["items"] %}
-            {%if row["type"] == "image" %}
-                
-                <!-- Open a project page when the image is clicked -->
-                <a href="/admin/project/{{ key}}">
-                <img src="{{row['content']}}">
-                </a>
-                <!--  Change the order of the project -->
-                <form action="/admin/order" method="post">
-                    Order:
-                 <input type="number" name="order" value="{{projects_sorted[key]['project_order']}}">
-                 <input type="hidden" name="id" value="{{key}}">
-                 <button type="submit"> Order</button>
-                 </form>
-                <!-- </div> -->
-            {% else %}
-                <p> {{ row["content"] }}</p> 
-            {% endif %}
-        {% endfor %}            
+   text-center gap-2 sm:gap-5 w-fit text-neutral-600">
+  {% for key in projects_sorted %}
+
+  <div>
+    <!-- Controls row above the card -->
+    <div class="admin-card-controls">
+      {% if projects_sorted[key]["hidden"] == 0 %}
+        <form action="/admin/toggle/{{key}}" method="post">
+          <button type="submit" class="admin-card-btn">Visible</button>
+        </form>
+      {% else %}
+        <form action="/admin/toggle/{{key}}" method="post">
+          <button type="submit" class="admin-card-btn muted">Hidden</button>
+        </form>
+      {% endif %}
+      <form action="/admin/delete/{{key}}" method="post">
+        <button type="submit" class="admin-card-btn">Delete</button>
+      </form>
+      <form action="/admin/order" method="post" style="display: flex; align-items: center; gap: 0.3rem;">
+        <input type="number" name="order" value="{{projects_sorted[key]['project_order']}}" class="admin-card-order-input">
+        <input type="hidden" name="id" value="{{key}}">
+        <button type="submit" class="admin-card-btn">Order</button>
+      </form>
     </div>
-{% endfor %}
+
+    <!-- Project card, untouched -->
+    <div>
+      <h2 class="text-3xl">{{projects_sorted[key]["title"]}}</h2>
+      <h3 class="text-m">{{projects_sorted[key]["description"]}}</h3>
+      {% for row in projects_sorted[key]["items"] %}
+      {% if row["type"] == "image" %}
+      <a href="/admin/project/{{ key}}">
+        <img src="{{row['content']}}">
+      </a>
+      {% else %}
+      <p>{{ row["content"] }}</p>
+      {% endif %}
+      {% endfor %}
+    </div>
+
+  </div>
+  {% endfor %}
 </div>
 
 <!-- Render if the admin isn't logged in -->
- {% else %}
- <div class="flex flex-wrap mb-16 mt-7 md:mx-4 justify-center items-center 
-        text-center gap-2 sm:gap-5 w-fit text-neutral-600">
- {% for key in projects_sorted %}
- <div class="flex gap-6 flex-wrap font-sans">
-   
-        
-        {% for row in projects_sorted[key]["items"] %}
-            {%if row["type"] == "image" %}
-                 <!-- Open the project page when the image is clicked -->
-                  
-                <a href="/project/{{ key}}">
-                <div class="w-[25rem] h-fit bg-neutral-100 bg-opacity-40 backdrop-blur-sm rounded-md 
-                flex flex-col p-2 pb-6 items-left hover:bg-neutral-200 hover:scale-[1.01] transition ease-out overflow-hidden text-left">
-                <div class="h-[14rem] bg-cover bg-center rounded-md transition ease-out" style="background-image: url(&quot;{{ row['content'] }}&quot;)">
-                <!-- <img src="{{row['content']}}"> -->
-                </div>
-                 <h2 class="text-3xl">{{projects_sorted[key]["title"]}}</h1>
-                <h3 class="text-m">{{projects_sorted[key]["description"]}}</h2>
-                </div>
-                </a>
-                
-            {% else %}
-                <p> {{ row["content"] }}</p> 
-            {% endif %}
-        {% endfor %}      
+{% else %}
+<div class="projects-container">
+   {% for key in projects_sorted %}
+   <div class="projects-row">
+      {% for row in projects_sorted[key]["items"] %}
+      {%if row["type"] == "image" %}
+      <form action="/project/{{ projects_sorted[key]['title'] | replace(' ', '-') | lower }}" method="POST" class="project-form">
+         <input type="hidden" name="key" value="{{ key }}">
+         <button type="submit" class="project-button">
+            <div class="project-card">
+               <div class="project-image-wrapper">
+                  <img src="{{ row['content'] }}" alt="{{ projects_sorted[key]['title'] }}" class="project-image">
+               </div>
+               <h2 class="project-title">{{projects_sorted[key]["title"]}}</h2>
+               <h3 class="project-description">{{projects_sorted[key]["description"]}}</h3>
             </div>
-    
-{% endfor %}
+         </button>
+      </form>
+      {% else %}
+      <p>{{ row["content"] }}</p>
+      {% endif %}
+      {% endfor %}
+   </div>
+   {% endfor %}
 </div>
-{% endif %} 
-
+{% endif %}
 {% endblock %}

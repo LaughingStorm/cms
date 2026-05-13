@@ -32,19 +32,6 @@
    
     </script>
     <h1 class="text-xl font-medium text-center mb-10">ABOUT</h1>
-   {% for row in content %} 
-   <div class="text-center">
-    <form action="/admin/about/delete" method="post">
-        <input type="hidden" name="content" value="{{row['content']}}">
-        <button type="submit">Delete</button>
-        {% if row["type"] == "image" %} 
-            <img src="/{{row['content']}}">
-        {% else%}
-            <p>{{row['content'] }}</p>
-        {% endif %}
-    </form>
-    </div>
-    {% endfor %}
     <form action="/admin/about" method="post" enctype="multipart/form-data">
             <div id="radio-inputs">
             <input type="radio" name="type" value="image"> Image
@@ -58,7 +45,23 @@
         
             <button type="submit"> Add</button>
         </form>
+           {% for row in content %} 
+   <div class="text-center">
+    <form action="/admin/about/delete" method="post">
+        <input type="hidden" name="content" value="{{row['content']}}">
         
+        {% if row["type"] == "image" %} 
+            <img src="/{{row['content']}}">
+        {% else%}
+            <div class="text-card">
+                <p>{{row['content'] }}</p>
+            </div>
+            >
+        {% endif %}
+        <button type="submit">Delete</button
+    </form>
+    </div>
+    {% endfor %}
 <!-- If the user is visiting the page -->
 {% else %}
         <div class="text-center">
@@ -68,7 +71,9 @@
     {% if row["type"] == "image" %}
         <img src="/{{row['content']}}">
     {% else%}
+        <div class="text-card">
         <p>{{row['content'] }}</p>
+        </div>
     {% endif %}
     {% endfor %}
 

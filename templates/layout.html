@@ -1,42 +1,37 @@
 <!DOCTYPE html>
-
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="initial-scale=1, width=device-width">
-        <link href="/static/styles.css" rel="stylesheet">
-        <link href="static/admin.css" rel="stylesheet">
-        <script src="https://cdn.tailwindcss.com"></script>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=MuseoModerno&family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
-        <title>Coolshitmaker's{% block title%}{% endblock%}</title>
-    </head>
-
-    <body class="m-4 md:m-8 lg:m-12">
-        <nav class="sticky top-0 z-[999] ">
-            {% if session["user_id"] %}
-                <div class="flex flex-row items-end space-x-0 md:space-x-0 space-y-0 font-mono text-xs lg:text-lg font-medium mb-20">
-                    <a class="inline-flex px-1 pt-1 transition-colors duration-200 relative z-[100] text-gray-600 hover:text-blue-400" href="/">HOME</a>
-                    <a class="inline-flex px-1 pt-1 transition-colors duration-200 relative z-[100] text-gray-600 hover:text-blue-400" href="/works">WORKS</a>
-                    <a class="inline-flex px-1 pt-1 transition-colors duration-200 relative z-[100] text-gray-600 hover:text-blue-800" href="/about">ABOUT</a>
-                    
-                        <a class="nav-link" href="/logout">Log Out</a>
-                    
-                </div>
-                        
-                    {% else %}
-                
-                <div class="flex flex-row justify-end space-x-0 md:space-x-0 space-y-0 font-mono text-xs lg:text-lg font-medium mb-10 z-[999]">
-                    <a class="inline-flex px-1 pt-1 transition-colors duration-200 relative z-[100] text-gray-600 hover:text-blue-600" href="/">HOME</a>
-                    <a class="inline-flex px-1 pt-1 transition-colors duration-200 relative z-[100] text-gray-600 hover:text-blue-600" href="/works">WORKS</a>
-                    <a class="inline-flex px-1 pt-1 transition-colors duration-200 relative z-[100] text-gray-600 hover:text-blue-600" href="/about">ABOUT</a>
-                    <!-- <li class="nav-item"><a class="inline-flex px-1 pt-1 transition-colors duration-200 " href="/adminlog">[Log in]</a></li> -->
-                </div>
-                    {% endif %}
-        </nav>
-        {%block main%} {% endblock %}
-    </body>
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="initial-scale=1, width=device-width">
+      <link href="/static/styles.css" rel="stylesheet">
+      <link href="/static/admin.css" rel="stylesheet">
+      <link href="/static/projects.css" rel="stylesheet">
+      <script src="https://cdn.tailwindcss.com"></script>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=MuseoModerno&family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+      <title>LaughingStorm's{% block title%}{% endblock%}</title>
+   </head>
+   <body class="m-4 md:m-8 lg:m-12">
+      <nav class="sticky top-0 z-[999] ">
+         {% if session["user_id"] %}
+         <div class="flex flex-row items-end space-x-0 md:space-x-0 space-y-0 font-mono text-xs lg:text-lg font-medium mb-20">
+            <a class="inline-flex px-1 pt-1 transition-colors duration-200 relative z-[100] text-gray-600 hover:text-blue-400" href="/">HOME</a>
+            <a class="inline-flex px-1 pt-1 transition-colors duration-200 relative z-[100] text-gray-600 hover:text-blue-400" href="/works">WORKS</a>
+            <a class="inline-flex px-1 pt-1 transition-colors duration-200 relative z-[100] text-gray-600 hover:text-blue-800" href="/about">ABOUT</a>
+            <a class="nav-link" href="/logout">Log Out</a>
+         </div>
+         {% else %}
+         <div class="flex flex-row justify-end space-x-0 md:space-x-0 space-y-0 font-mono text-xs lg:text-lg font-medium mb-10 z-[999]">
+            <a class="inline-flex px-1 pt-1 transition-colors duration-200 relative z-[100] text-gray-600 hover:text-blue-600" href="/">HOME</a>
+            <a class="inline-flex px-1 pt-1 transition-colors duration-200 relative z-[100] text-gray-600 hover:text-blue-600" href="/works">WORKS</a>
+            <a class="inline-flex px-1 pt-1 transition-colors duration-200 relative z-[100] text-gray-600 hover:text-blue-600" href="/about">ABOUT</a>
+            <!-- <li class="nav-item"><a class="inline-flex px-1 pt-1 transition-colors duration-200 " href="/adminlog">[Log in]</a></li> -->
+         </div>
+         {% endif %}
+      </nav>
+      {%block main%} {% endblock %}
+   </body>
 </html>
