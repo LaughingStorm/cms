@@ -54,18 +54,3 @@ CREATE TABLE IF not EXISTS project_contents
     project_id INTEGER,
     FOREIGN KEY(project_id) REFERENCES projects(id));
     
-
-INSERT INTO projects(title, description, sort_order, date) VALUES("Suso", "Susin project", 1, "03/06/2026");
-
-INSERT INTO project_contents(type, content, sort_order, project_id) 
-                    VALUES("p","Project paragraph", 2, 2);
-
-INSERT INTO fields(field) VALUES("Digital art");
-
-INSERT INTO images(path, sort_order, field_id) VALUES ("static/images/bfaf.jpg", "2","1");
-
-UPDATE images SET path = "static/images/gesture_1.jpg" WHERE id=1;
-
-ALTER TABLE table_name RENAME COLUMN current_name TO new_name;
-
-ALTER TABLE images ADD COLUMN alt TEXT NOT NULL DEFAULT "image"

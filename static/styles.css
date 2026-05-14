@@ -116,7 +116,8 @@ img {
     font-size: 14px;
 }
 
-/* 3. Button Styling */
+/*
+Button Styling */
 #add-inputs button {
     padding: 10px;
     background-color: #222;
@@ -130,7 +131,63 @@ img {
 #add-inputs button:hover {
     background-color: #444;
 }
+.projects-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  padding: 2rem;
+}
 
+.projects-row {
+  display: contents;
+}
+
+.project-form {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.project-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+}
+
+.project-card {
+  width: 350px;
+}
+
+.project-image-wrapper {
+  background: #fff;
+  border-radius: 15px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.project-image {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  margin: 0;
+}
+
+.project-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.5rem;
+  font-weight: 400;
+  margin-bottom: 0.3rem;
+}
+
+.project-description {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.9rem;
+  color: #78716c;
+}
 /*   */
 @media (max-width: 768px) {
 img {

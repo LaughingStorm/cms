@@ -5,3 +5,6 @@ flask_session
 node_modules/
 database.py
 test.py
+*.db
+.env
+uploads/

@@ -4,8 +4,8 @@
 {% endblock %}
 {% block main %}
 <h1 class="text-center  text-6xl mb-3"> LaughingStorm</h1>
-<h3 class="text-center text-2xl ">Is a crazy creative.</h3>
-<h4 class="text-center text-2xl mb-20">He is an illustrator, designer, programmer, tattoo artist.</h4>
+<h3 class="text-center text-2xl ">This is a CMS app showcase</h3>
+<h4 class="text-center text-2xl mb-20">Made using Flask</h4>
 
 <!-- Render only if the admin is logged in -->
 {% if session["user_id"] %}
@@ -24,7 +24,7 @@
 
 <!-- render the projects -->
 <div class="flex flex-wrap mb-16 mt-7 md:mx-4 justify-center items-center 
-   text-center gap-2 sm:gap-5 w-fit text-neutral-600">
+   text-center gap-8 sm:gap-12 w-full text-neutral-600">
   {% for key in projects_sorted %}
 
   <div>
@@ -49,50 +49,54 @@
       </form>
     </div>
 
-    <!-- Project card, untouched -->
-    <div>
-      <h2 class="text-3xl">{{projects_sorted[key]["title"]}}</h2>
-      <h3 class="text-m">{{projects_sorted[key]["description"]}}</h3>
-      {% for row in projects_sorted[key]["items"] %}
-      {% if row["type"] == "image" %}
-      <a href="/admin/project/{{ key}}">
-        <img src="{{row['content']}}">
-      </a>
-      {% else %}
-      <p>{{ row["content"] }}</p>
-      {% endif %}
-      {% endfor %}
-    </div>
+    <!-- Project card -->
+    {% for row in projects_sorted[key]["items"] %}
+    {% if row["type"] == "image" %}
+    <a href="/admin/project/{{ key}}" style="text-decoration:none; color:inherit;">
+      <div class="w-[25rem] h-fit bg-neutral-100 bg-opacity-40 backdrop-blur-sm rounded-md 
+      flex flex-col p-2 pb-6 items-left hover:bg-neutral-200 hover:scale-[1.01] transition ease-out overflow-hidden text-left">
+        <div class="h-[14rem] bg-cover bg-center rounded-md transition ease-out" style="background-image: url({{ row['content']}})">
+        </div>
+        <h2 class="text-3xl">{{projects_sorted[key]["title"]}}</h2>
+        <h3 class="text-m">{{projects_sorted[key]["description"]}}</h3>
+      </div>
+    </a>
+    {% else %}
+    <p>{{ row["content"] }}</p>
+    {% endif %}
+    {% endfor %}
 
   </div>
   {% endfor %}
+
 </div>
 
 <!-- Render if the admin isn't logged in -->
 {% else %}
-<div class="projects-container">
-   {% for key in projects_sorted %}
-   <div class="projects-row">
-      {% for row in projects_sorted[key]["items"] %}
-      {%if row["type"] == "image" %}
-      <form action="/project/{{ projects_sorted[key]['title'] | replace(' ', '-') | lower }}" method="POST" class="project-form">
-         <input type="hidden" name="key" value="{{ key }}">
-         <button type="submit" class="project-button">
-            <div class="project-card">
-               <div class="project-image-wrapper">
-                  <img src="{{ row['content'] }}" alt="{{ projects_sorted[key]['title'] }}" class="project-image">
-               </div>
-               <h2 class="project-title">{{projects_sorted[key]["title"]}}</h2>
-               <h3 class="project-description">{{projects_sorted[key]["description"]}}</h3>
-            </div>
-         </button>
-      </form>
-      {% else %}
-      <p>{{ row["content"] }}</p>
-      {% endif %}
-      {% endfor %}
-   </div>
-   {% endfor %}
+<div class="flex flex-wrap mb-16 mt-7 md:mx-4 justify-center items-center 
+    text-center gap-2 sm:gap-5 w-full text-neutral-600">
+{% for key in projects_sorted %}
+<div class="flex gap-6 flex-wrap font-sans">
+    {% for row in projects_sorted[key]["items"] %}
+        {% if row["type"] == "image" %}
+            <form action="/project/{{ projects_sorted[key]['title'] | replace(' ', '-') | lower }}" method="POST">
+                <input type="hidden" name="key" value="{{ key }}">
+                <button type="submit" style="background:none; border:none; cursor:pointer; padding:0; text-align:left;">
+                    <div class="w-[25rem] h-fit bg-neutral-100 bg-opacity-40 backdrop-blur-sm rounded-md 
+                    flex flex-col p-2 pb-6 items-left hover:bg-neutral-200 hover:scale-[1.01] transition ease-out overflow-hidden text-left">
+                        <div class="h-[14rem] bg-cover bg-center rounded-md transition ease-out" style="background-image: url({{ row['content']}})">
+                        </div>
+                        <h2 class="text-3xl">{{projects_sorted[key]["title"]}}</h2>
+                        <h3 class="text-m">{{projects_sorted[key]["description"]}}</h3>
+                    </div>
+                </button>
+            </form>
+        {% else %}
+            <p>{{ row["content"] }}</p>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endfor %}
 </div>
 {% endif %}
-{% endblock %}
+{% endblock%}
