@@ -29,7 +29,7 @@ CREATE TABLE IF not EXISTS  fields
 CREATE TABLE IF not EXISTS images
     (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
     path TEXT NOT NULL UNIQUE,
-    sort_order INTEGER,
+    sort_order INTEGER,6;
     featured BOOLEAN DEFAULT FALSE,
     alt TEXT NOT NULL DEFAULT "image",
     title TEXT,
